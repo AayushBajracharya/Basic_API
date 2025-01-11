@@ -9,7 +9,7 @@ namespace Application.Handlers.StudentHandler
     public class GetAllStudentsHandlers : IRequestHandler<GetAllStudentsQuery, IEnumerable<ViewStudentDTO>>
     {
         private readonly IStudentRepository _repo;
-
+        // Dependency Injection
         public GetAllStudentsHandlers(IStudentRepository repo)
         {
             _repo = repo;
