@@ -1,5 +1,7 @@
 using Application.Handlers.StudentHandler;
 using Application.Services;
+using Application.Validation;
+using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using Infrastructure.Repository;
 using MediatR;
@@ -16,6 +18,10 @@ builder.Services.AddMediatR(cfg =>
 
 
 builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<StudentValidation>());
+
+
 builder.Services.AddScoped<IStudentServices, StudentServices>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
