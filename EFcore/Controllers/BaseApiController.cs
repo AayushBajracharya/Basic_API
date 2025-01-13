@@ -10,5 +10,6 @@ namespace EFcore.Controllers
         private IMediator _mediator;
         private ILogger _logger;
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+        protected ILogger Logger => _logger ??= HttpContext.RequestServices.GetService<ILogger<BaseApiController>>();
     }
 }

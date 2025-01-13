@@ -13,9 +13,9 @@ namespace Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<Student>> GetAllStudentAsync()
+        public async Task<IQueryable<Student>> GetAllStudentAsync()
         {
-            return await _context.Students.ToListAsync();
+            return _context.Students.AsQueryable();
         }
 
         public async Task<Student> GetStudentByIdAsync(int id)

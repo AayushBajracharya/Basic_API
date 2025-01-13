@@ -1,7 +1,7 @@
 ﻿using Domain.Command.Cmd.StudentCmd;
 using Domain.Command.Queries.StudentsQueries;
 using Domain.DTOs.StudentDTOs;
-using MediatR;
+using Domain.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EFcore.Controllers
@@ -10,41 +10,45 @@ namespace EFcore.Controllers
     [ApiController]
     public class StudentController : BaseApiController
     {
-        //private readonly IMediator _mediator;
-        private readonly ILogger<StudentController> _logger;
 
-
-        public StudentController(IMediator mediator, ILogger<StudentController> logger, IWebHostEnvironment webHostEnvironment)
+        // AdminController.cs
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetFilteredStudents([FromQuery] string? searchTerm, [FromQuery] string? sortBy, [FromQuery] bool isDescending = false)
         {
-            //_mediator = mediator;
-            _logger = logger;
-        }
+            var query = new GetFilteredStudentQuery
+            {
+                SearchTerm = searchTerm,
+                SortBy = sortBy,
+                IsDescending = isDescending
+            };
 
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllStudentAsync()
         {
-            _logger.LogInformation($"{nameof(GetAllStudentAsync)} trigger function received a request with param query");
+            Logger.LogInformation($"{nameof(GetAllStudentAsync)} trigger function received a request with param query");
             var students = await Mediator.Send(new GetAllStudentsQuery());
-            _logger.LogInformation($"{nameof(GetAllStudentAsync)}  trigger function returned a response");
+            Logger.LogInformation($"{nameof(GetAllStudentAsync)}  trigger function returned a response");
             return Ok(students);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> AddStudentAsync(CreateStudentDTO student)
         {
-            _logger.LogInformation($"{nameof(AddStudentAsync)} trigger function received a request with param query");
+            Logger.LogInformation($"{nameof(AddStudentAsync)} trigger function received a request with param query");
             var id = await Mediator.Send(new CreateStudentCommand(student));
-            _logger.LogInformation($"{nameof(AddStudentAsync)}  trigger function returned a response");
+            Logger.LogInformation($"{nameof(AddStudentAsync)}  trigger function returned a response");
             return Ok(id);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudentByIdAsync(int id)
         {
-            _logger.LogInformation($"{nameof(GetStudentByIdAsync)} trigger function received a request with param query");
+            Logger.LogInformation($"{nameof(GetStudentByIdAsync)} trigger function received a request with param query");
             var getById = await Mediator.Send(new GetStudentsByIdQuery(id));
-            _logger.LogInformation($"{nameof(GetStudentByIdAsync)}  trigger function returned a response");
+            Logger.LogInformation($"{nameof(GetStudentByIdAsync)}  trigger function returned a response");
             return getById != null ? Ok(getById) : NotFound();
         }
 
